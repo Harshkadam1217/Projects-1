@@ -1,0 +1,20 @@
+How to run the project
+
+=====================================================
+ for running web application
+-----------------------------------------------------
+1.open anaconda prompt
+2.conda activate mini
+3.cd C:\Users\HP\OneDrive\Desktop\mini\CareerAndJobRecommendation
+4.python manage.py runserver
+5.http://127.0.0.1:8000/
+-----------------------------------------------------------------------
+
+ for running jupyter notebook
+-----------------------------------------------------
+1.open anaconda prompt
+2.conda activate mini
+3.cd C:\Users\HP\OneDrive\Desktop\mini\CareerAndJobRecommendation\Notebook
+4.jupyter notebook
+
+-----------------------------------------------------------------------

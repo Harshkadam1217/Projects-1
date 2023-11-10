@@ -1,0 +1,94 @@
+{% load  static%}
+<!DOCTYPE HTML>
+<html>
+
+<head>
+<title>Voidmain</title>
+<link rel="stylesheet" type="text/css" href="{% static 'style/style.css'%}" title="style" />
+</head>
+
+<body>
+	<div id="main">
+		<div id="header">
+			<div id="logo">
+				<div id="logo_text">
+					<!-- class="logo_colour", allows you to change the colour of the text -->
+					<div align="center">
+                        <h3>
+						    <a href="#"><font color="white" size="5">Career and Job Recommendations</font></a>
+					    </h3>
+                    </div>
+					<br/><br/>
+				</div>
+			</div>
+			<div id="menubar">
+				<ul id="menu">
+
+					{% if request.session.role in "admin" %}
+
+                         <li><a href="/addnotification">Add Notification</a></li>
+                         <li> <a href="/getnotifications">Notification</a></li>
+                         <li> <a href="/getmessages">Messages</a></li>
+                         <li><a href="/getapplications">Applications</a></li>
+                         <li><a href="/logout">Logout</a></li>
+
+                    {% endif %}
+
+				</ul>
+			</div>
+		</div>
+		<div id="content_header"></div>
+		<div id="site_content">
+			<div id="content">
+
+				<h1>Post Job : {{message}}</h1>
+
+				<form name="form" action="/addnotificationaction">
+					<div class="form_settings">
+
+                        <p>
+							<span>Company Name:</span><input class="contact" type="text" name="companyname" required/>
+						</p>
+
+                        <p>
+							<span>Select Job Role</span>
+                            <select name="jobrole" required>
+                                {% for jobrole in jobroles %}
+                                    <option value="{{ jobrole}}">{{ jobrole }}</option>
+                                {% endfor %}
+                            </select>
+						</p>
+
+						<p>
+                            <span>Company Address :</span><textarea class="contact" name="location" required></textarea>
+						</p>
+
+                        <p>
+                            <span>Salary :</span><input type="number" class="contact" name="salary" required>
+						</p>
+
+                        <p>
+                            <span>Job Application Link :</span><input type="text" class="contact" name="applylink" required>
+						</p>
+
+                        <p>
+                            <span>Job Description :</span><textarea class="contact" name="description" required></textarea>
+						</p>
+
+                        <p>
+                            <span>Last Date to Apply :</span><input type="date" class="contact" name="lastdate" required>
+						</p>
+
+						<p style="padding-top: 15px">
+							<span>&nbsp;</span><input class="submit" type="submit"
+								name="contact_submitted" value="Post Notification" />
+						</p>
+
+					</div>
+				</form>
+
+			</div>
+		</div>
+	</div>
+</body>
+</html>

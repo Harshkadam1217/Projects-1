@@ -1,0 +1,129 @@
+{% load  static%}
+<!DOCTYPE HTML>
+<html>
+
+<head>
+<title>Voidmain</title>
+<link rel="stylesheet" type="text/css" href="{% static 'style/style.css'%}" title="style" />
+
+    <style>
+        #customers {
+          font-family: Arial, Helvetica, sans-serif;
+          border-collapse: collapse;
+          width: 100%;
+        }
+
+        #customers td, #customers th {
+          border: 1px solid #ddd;
+          padding: 8px;
+        }
+
+        #customers tr:nth-child(even){background-color: #f2f2f2;}
+
+        #customers tr:hover {background-color: #ddd;}
+
+        #customers th {
+          padding-top: 12px;
+          padding-bottom: 12px;
+          text-align: left;
+          background-color: #4CAF50;
+          color: white;
+        }
+    </style>
+
+</head>
+<body>
+	<div id="main">
+		<div id="header">
+			<div id="logo">
+				<div id="logo_text">
+					<!-- class="logo_colour", allows you to change the colour of the text -->
+					<div align="center">
+                        <h3>
+						    <a href="#"><font color="white" size="5">Career and Job Recommendations</font></a>
+					    </h3>
+                    </div>
+					<br/><br/>
+				</div>
+			</div>
+			<div id="menubar">
+				<ul id="menu">
+
+                    {% if request.session.role in "admin" %}
+
+                         <li><a href="/addnotification">Add Notification</a></li>
+                         <li> <a href="/getnotifications">Notification</a></li>
+                         <li> <a href="/getmessages">Messages</a></li>
+                         <li><a href="/getapplications">Applications</a></li>
+                         <li><a href="/logout">Logout</a></li>
+
+                    {% endif %}
+
+
+                    {% if request.session.role in "student" %}
+
+                        <li> <a href="/jobroleprediction">Predict Job Role</a></li>
+                        <li> <a href="/placementprediction">Placement Prediction</a></li>
+                        <li> <a href="/updatestudent">Update Profile</a></li>
+                        <li> <a href="/getmyprofile">Profile</a></li>
+                        <li> <a href="/getnotifications">Notification</a></li>
+                        <li> <a href="/postmessage?postedto=admin">Post Message</a></li>
+                        <li> <a href="/getmessages">Messages</a></li>
+                        <li><a href="/logout">Logout</a></li>
+
+                    {% endif %}
+
+				</ul>
+			</div>
+		</div>
+		<div id="content_header"></div>
+		<div id="site_content">
+
+            <div id="content">
+
+				<h1>Welcome to  <strong>{{request.session.username}}</strong>{{form.non_field_errors}}</h1>
+
+                <h1><strong>{{message}}</strong></h1>
+
+                <table id="customers">
+                  <tr>
+                      <th>Company Name</th>
+                      <th>Job Role</th>
+                      <th>Job Location</th>
+                      <th>Salary</th>
+                      <th>Application Link</th>
+                      <th>Description</th>
+                      <th>Last Date</th>
+
+                      {% if request.session.role in "admin" %}
+                         <th>Delete</th>
+                      {% endif %}
+
+
+                  </tr>
+                    {% for notification in notifications %}
+
+                        <tr>
+
+                            <td>{{ notification.companyname }}</td>
+                            <td>{{ notification.jobrole}}</td>
+                            <td>{{ notification.location }}</td>
+                            <td>{{ notification.salary}}</td>
+                            <td>{{ notification.applylink }}</td>
+                            <td>{{ notification.description}}</td>
+                            <td>{{ notification.lastdate }}</td>
+
+                            {% if request.session.role in "admin" %}
+                                <td><a href="/deletenotification?notificationid={{ notification.id }}">delete</a></td>
+                            {% endif %}
+
+                        </tr>
+
+                    {% endfor %}
+                </table>
+
+            </div>
+        </div>
+	</div>
+</body>
+</html>

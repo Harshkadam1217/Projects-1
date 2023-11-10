@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>Prognosis</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <style>
+* { -webkit-box-sizing:border-box; -moz-box-sizing:border-box; -ms-box-sizing:border-box; -o-box-sizing:border-box; box-sizing:border-box; }
+
+html { width: 100%; height:100%; }
+
+body {
+	width: 100%;
+	height:100%;
+	font-family: 'Open Sans', sans-serif;
+	background: #092756;
+	color: #fff;
+	font-size: 18px;
+	text-align:center;
+	letter-spacing:1.2px;
+}
+.login {
+  max-width: 400px;
+  width: 100%;
+  margin: 0 auto;
+  position: relative;
+}
+
+.login h1 { color: #fff; text-shadow: 0 0 10px rgba(0,0,0,0.3); letter-spacing:1px; text-align:center; }
+
+input {
+	margin-bottom: 10px;
+	background: rgba(0,0,0,0.3);
+	border: none;
+	outline: none;
+	padding: 10px;
+	font-size: 18px;
+	color: #fff;
+	text-shadow: 1px 1px 1px rgba(0,0,0,0.3);
+	border: 1px solid rgba(0,0,0,0.3);
+	border-radius: 4px;
+	box-shadow: inset 0 -5px 45px rgba(100,100,100,0.2), 0 1px 1px rgba(255,255,255,0.2);
+	-webkit-transition: box-shadow .5s ease;
+	-moz-transition: box-shadow .5s ease;
+	-o-transition: box-shadow .5s ease;
+	-ms-transition: box-shadow .5s ease;
+	transition: box-shadow .5s ease;
+}
+input:focus { box-shadow: inset 0 -5px 45px rgba(100,100,100,0.4), 0 1px 1px rgba(255,255,255,0.2); }
+    </style>
+</head>
+<body>
+
+ <div class="login">
+     <font color="red" size="3">
+         <a href="/jobroleprediction">Predict Job Role</a> ||
+         <a href="/placementprediction">Placement Prediction</a>||
+         <a href="/updatestudent">Update Profile</a> ||
+         <a href="/getmyprofile">Profile</a> ||
+         <a href="/getnotifications">Notification</a> ||
+         <a href="/postmessage?postedto=admin">Post Message</a> ||
+         <a href="/getmessages">Messages</a> ||
+         <a href="/logout">Logout</a>
+     </font>
+
+    <form action="/placementpredictionaction">
+		<br>
+
+		<input style="	width: 100%;" type="text" name="ssc_p" placeholder="Secondary School Percentage" required="required" /><br>
+
+		<div>
+			<label>Select SSC Board: </label>
+			<select name="ssc_b">
+				<option value="0">Central</option>
+				<option value="1">Others</option>
+			</select>
+        </div>
+
+		<input style="width: 100%;" type="text" name="hsc_p" placeholder="High School Percentage" required="required" /><br>
+
+		<div>
+			<label>Select HSC Board: </label>
+			<select name="hsc_b">
+				<option value="0">Central</option>
+				<option value="1">Others</option>
+			</select>
+        </div>
+
+		<div>
+			<label>Select HSC Stream: </label>
+			<select name="hsc_s">
+				<option value="Arts">Arts</option>
+				<option value="Commerce">Commerce</option>
+				<option value="Science">Science</option>
+			</select>
+        </div>
+
+        <input style="width: 100%;" type="text" name="degree_p" placeholder="Undergraduate Degree Percentage" required="required" /><br>
+
+		<div>
+			<label>Select Degree Stream: </label>
+			<select name="degree_t">
+				<option value="Comm&Mgmt">Comm&Mgmt</option>
+				<option value="Others">Others</option>
+				<option value="Sci&Tech">Sci&Tech</option>
+			</select>
+        </div>
+
+		<div>
+			<label>Gender: </label>
+			<label for="Female">Female</label>
+			<input type="radio" id="Female" name="gender" value=0 required="True">
+			&nbsp;&nbsp;
+			<label for="Male">Male</label>
+			<input type="radio" id="Male" name="gender" value=1 required="True">
+        </div>
+
+		<div>
+			<label>Do you Have Work Experience: </label>
+			<select name="workex">
+				<option value="0">No</option>
+				<option value="1">Yes</option>
+			</select>
+        </div>
+
+		<input style="width: 100%;" type="text" name="etest_p" placeholder="Entrance Test Percentage" required="required" /><br>
+
+        <button type="submit" class="btn btn-primary btn-block btn-small">Predict</button>
+
+    </form>
+
+   <br>
+   <br>
+   <label>Prediction:</label>&nbsp;
+   {{ prediction_text }}
+
+   <label>Predicted Salary Ranges between:{{salary_low}}--{{salary_high}}</label>&nbsp;
+
+ </div>
+
+</body>
+</html>

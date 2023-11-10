@@ -1,0 +1,110 @@
+{% load  static%}
+<!DOCTYPE HTML>
+<html>
+
+<head>
+<title>Voidmain</title>
+<link rel="stylesheet" type="text/css" href="{% static 'style/style.css'%}" title="style" />
+
+    <style>
+        #customers {
+          font-family: Arial, Helvetica, sans-serif;
+          border-collapse: collapse;
+          width: 100%;
+        }
+
+        #customers td, #customers th {
+          border: 1px solid #ddd;
+          padding: 8px;
+        }
+
+        #customers tr:nth-child(even){background-color: #f2f2f2;}
+
+        #customers tr:hover {background-color: #ddd;}
+
+        #customers th {
+          padding-top: 12px;
+          padding-bottom: 12px;
+          text-align: left;
+          background-color: #4CAF50;
+          color: white;
+        }
+    </style>
+
+</head>
+<body>
+	<div id="main">
+		<div id="header">
+			<div id="logo">
+				<div id="logo_text">
+					<!-- class="logo_colour", allows you to change the colour of the text -->
+					<h3>
+						<center><a href="#"><font color="white" size="5">Student Placement Assistant</font></a></center>
+					</h3>
+					<br/><br/>
+				</div>
+			</div>
+			<div id="menubar">
+				<ul id="menu">
+
+                    {% if request.session.role in "admin" %}
+
+                         <li><a href="/addnotification">Add Notification</a></li>
+                         <li> <a href="/getnotifications">Notification</a></li>
+                         <li> <a href="/getmessages">Messages</a></li>
+                         <li><a href="/getapplications">Applications</a></li>
+                         <li><a href="/logout">Logout</a></li>
+
+                    {% endif %}
+
+
+                    {% if request.session.role in "student" %}
+
+                        <li> <a href="/jobroleprediction">Predict Job Role</a></li>
+                        <li> <a href="/placementprediction">Placement Prediction</a></li>
+                        <li> <a href="/updatestudent">Update Profile</a></li>
+                        <li> <a href="/getmyprofile">Profile</a></li>
+                        <li> <a href="/getnotifications">Notification</a></li>
+                        <li> <a href="/postmessage?postedto=admin">Post Message</a></li>
+                        <li> <a href="/getmessages">Messages</a></li>
+                        <li><a href="/logout">Logout</a></li>
+
+                    {% endif %}
+
+				</ul>
+			</div>
+		</div>
+		<div id="content_header"></div>
+		<div id="site_content">
+
+            <div id="content">
+
+				<h1>Welcome to  <strong>{{request.session.username}}</strong>{{form.non_field_errors}}</h1>
+
+                <h1><strong>{{message}}</strong></h1>
+
+                <table id="customers">
+                  <tr>
+                      <th>User ID</th>
+                      <th>Notification</th>
+                      <th>Student Info</th>
+                      {% if request.session.role in "admin" %}
+                         <th>send email</th>
+                     {% endif %}
+
+                  </tr>
+                    {% for key, value in applications.items %}
+                        <tr>
+                            <td>{{key}}</td>
+                            <td>{{value}}</td>
+                             <td><a href="/getstudentinfo?rno={{key}}">student info</a></td>
+                            <td><a href="/updatenotificationstatus?userid={{key}}&job=value">send email</a></td>
+                        </tr>
+                    {% endfor %}
+                </table>
+
+            </div>
+        </div>
+	</div>
+</body>
+</html>

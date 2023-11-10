@@ -1,0 +1,138 @@
+from django.shortcuts import render
+
+from careerandjob.forms import LoginForm
+from careerandjob.models import NotificationModel
+
+import pandas as pd
+from sklearn.preprocessing import LabelEncoder
+import os
+
+PROJECT_PATH = os.path.abspath(os.path.dirname(__name__))
+
+def login(request):
+
+    if request.method == "GET":
+
+        loginForm = LoginForm(request.GET)
+
+        if loginForm.is_valid():
+
+            uname = loginForm.cleaned_data["username"]
+            upass = loginForm.cleaned_data["password"]
+
+            if uname == "admin" and upass == "admin":
+
+                request.session['role'] = "admin"
+
+                return render(request, "viewnotifications.html", {"notifications": NotificationModel.objects.all()})
+
+            else:
+                return render(request, 'index.html', {"message": "Invalid Credentials"})
+        else:
+            return render(request, 'index.html', {"message": "Invalid From"})
+
+    return render(request, 'index.html', {"message": "Invalid Request"})
+
+def logout(request):
+    try:
+        del request.session['username']
+    except:
+        pass
+    return render(request, 'index.html', {})
+
+#============================================================================
+
+def addnotification(request):
+
+    dataset = pd.read_csv(PROJECT_PATH+"/dataset/career_compute_dataset.csv")
+    jobroles = set(dataset["ROLE"].tolist())
+    print(jobroles)
+    return render(request, 'addnotification.html', {"jobroles":set(jobroles)})
+
+def addnotificationaction(request):
+
+    companyname = request.GET['companyname']
+    jobrole = request.GET['jobrole']
+    location = request.GET['location']
+    salary = request.GET['salary']
+    applylink = request.GET['applylink']
+    description = request.GET['description']
+    lastdate = request.GET['lastdate']
+
+    NotificationModel(companyname=companyname,jobrole=jobrole,location=location,salary=salary,applylink=applylink,description=description,lastdate=lastdate).save()
+
+    return render(request, 'addnotification.html', {"message": "Job Posted SuccessFully"})
+
+    return render(request, 'addnotification.html', {"message": "Job Posted Failed"})
+
+def getnotifications(request):
+    return render(request, "viewnotifications.html",{"notifications": NotificationModel.objects.all()})
+
+def deletenotification(request):
+
+    notificationid = request.GET['notificationid']
+    NotificationModel.objects.get(id=notificationid).delete()
+
+    return render(request, "viewnotifications.html", {"notifications": NotificationModel.objects.all()})
+
+#======================================================
+
+def jobroleprediction(request):
+
+    sslc = int(request.POST["sslc"])
+    hsc = int(request.POST["hsc"])
+    cgpa = int(request.POST["cgpa"])
+    school_type = int(request.POST["school_type"])
+    no_of_miniprojects = int(request.POST["no_of_miniprojects"])
+    no_of_projects = int(request.POST["no_of_projects"])
+    coresub_skill = int(request.POST["coresub_skill"])
+    aptitude_skill = int(request.POST["aptitude_skill"])
+    problemsolving_skill = int(request.POST["problemsolving_skill"])
+    programming_skill = int(request.POST["programming_skill"])
+    abstractthink_skill = int(request.POST["abstractthink_skill"])
+    design_skill = int(request.POST["design_skill"])
+    lab_programs = int(request.POST["lab_programs"])
+    ds_coding = int(request.POST["ds_coding"])
+    technology_used = int(request.POST["technology_used"])
+    sympos_attend = int(request.POST["sympos_attend"])
+    sympos_won = int(request.POST["sympos_won"])
+    extracurricular = int(request.POST["extracurricular"])
+    learning_style = int(request.POST["learning_style"])
+    college_performence = int(request.POST["college_performence"])
+    college_skills = int(request.POST["college_skills"])
+
+    dataset = pd.read_csv(PROJECT_PATH+"/dataset/career_compute_dataset.csv")
+    labelencoder = LabelEncoder()
+    df = dataset
+    label = df.iloc[:49, -1]
+    original = label.unique()
+    label = label.values
+    label2 = labelencoder.fit_transform(label)
+    y = pd.DataFrame(label2, columns=["ROLE"])
+    numeric = y["ROLE"].unique()
+    y1 = pd.DataFrame({'ROLE': original, 'Associated Number': numeric})
+    print(y1)
+
+    import pickle
+    loaded_model = pickle.load(open(PROJECT_PATH+"/model/final_model.pkl", "rb"))
+
+    cols_when_model_builds = loaded_model.get_booster().feature_names
+    print(cols_when_model_builds)
+
+    x_new = [sslc, hsc, cgpa, school_type, no_of_miniprojects,
+       no_of_projects, coresub_skill, aptitude_skill,
+       problemsolving_skill, programming_skill, abstractthink_skill,
+       design_skill, lab_programs, ds_coding, technology_used,
+       sympos_attend, sympos_won, extracurricular, learning_style,
+       college_performence, college_skills]
+
+    l = ['f0', 'f1', 'f2', 'f3', 'f4', 'f5', 'f6', 'f7', 'f8', 'f9', 'f10', 'f11', 'f12', 'f13', 'f14', 'f15', 'f16',
+         'f17', 'f18', 'f19', 'f20']
+    df = pd.DataFrame([x_new],columns=l)
+
+    new_pred = loaded_model.predict(df)
+    label=y1.loc[y1['Associated Number'] == new_pred[0], 'ROLE'].tolist()[0]
+    print("Label :",label)
+
+    return render(request, "jobroleprediction.html", {"notifications": NotificationModel.objects.filter(jobrole=label),
+    "result":"Suggested Job Role : {}".format(label)})
